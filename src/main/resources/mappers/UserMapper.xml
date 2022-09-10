@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.uni.mapper.UserMapper">
+
+
+    <select id="isExists" resultType="UserDto">
+        SELECT id
+        FROM USER
+        WHERE ID = #{id}
+    </select>
+
+    <select id="idExists" resultType="boolean">
+        SELECT EXISTS(SELECT id FROM USER WHERE id = #{id})
+    </select>
+
+
+    <insert id="save" parameterType="SignUpDto">
+        INSERT INTO USER(id, email, password, name, phone_number, student_id)
+        VALUES (#{user.id}, #{user.email}, #{user.password}, #{user.name}, #{user.phoneNumber}, #{user.studentId})
+    </insert>
+
+    <select id="findById" resultType="UserDto">
+        SELECT *
+        FROM USER
+        WHERE id = #{id}
+    </select>
+
+    <update id="update">
+        UPDATE USER
+        SET email        = #{user.email},
+            name         = #{user.name},
+            phone_number = #{user.phoneNumber},
+            student_id   = #{user.studentId}
+        WHERE id = #{id};
+    </update>
+
+    <delete id="delete">
+        DELETE
+        FROM USER
+        WHERE id = #{id};
+    </delete>
+
+
+</mapper>
