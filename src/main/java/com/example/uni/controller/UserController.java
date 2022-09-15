@@ -20,7 +20,7 @@ public class UserController {
     private final LoginService loginService;
 
     @PostMapping
-    public ResponseEntity<Void> signUp(@RequestBody SignUpDto userDto){
+    public ResponseEntity<Void> signUp(@RequestBody SignUpDto userDto) {
         userService.save(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -41,14 +41,14 @@ public class UserController {
 
     @LoginCheck
     @PatchMapping
-    public ResponseEntity<Void> updateUser(@SessionUserId String userId, @RequestBody UserDto userDto){
+    public ResponseEntity<Void> updateUser(@SessionUserId String userId, @RequestBody UserDto userDto) {
         userService.updateUser(userDto, userId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @LoginCheck
     @DeleteMapping
-    public ResponseEntity<Void> deleteUser(@SessionUserId String userId){
+    public ResponseEntity<Void> deleteUser(@SessionUserId String userId) {
         userService.deleteUser(userId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

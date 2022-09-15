@@ -3,11 +3,9 @@ package com.example.uni.controller;
 import com.example.uni.dto.SignUpDto;
 import com.example.uni.dto.UserDto;
 import com.example.uni.enums.UserType;
+import com.example.uni.mapper.UserMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +14,7 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,26 +32,22 @@ class UserControllerTest {
 
     MockHttpSession mockHttpSession = new MockHttpSession();
 
-    public SignUpDto getSignUpDto(){
+    public SignUpDto getSignUpDto() {
         return SignUpDto.builder()
-                .id("user1")
+                .id("computer")
                 .password("1234")
-                .name("최왕규")
-                .email("dhkdrb897@naver.com")
-                .studentId("20174376")
+                .name("조교1")
+                .email("admin1@naver.com")
+                .studentId("20172222")
                 .phoneNumber("010-1234-1234")
+                .departmentId(1L)
+                .type(UserType.ADMIN)
                 .build();
     }
 
 
-//    @BeforeEach
-//    void beforeEach(){
-//        mockHttpSession.setAttribute("SESSION_ID", "user1");
-//        mockHttpSession.setAttribute("USER_TYPE", UserType.USER);
-//    }
-
     @Test
-    void signUp() throws Exception{
+    void signUp() throws Exception {
         String json = objectMapper.writeValueAsString(getSignUpDto());
         mockMvc.perform(post("/users").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
@@ -62,13 +56,61 @@ class UserControllerTest {
 
     // 존재 안하고 하면 CLIENT_ERROR
     @Test
-    void login() throws Exception{
+    void login() throws Exception {
         UserDto userDto = UserDto.builder().id("user1").password("1234").build();
         String json = objectMapper.writeValueAsString(userDto);
 
         mockMvc.perform(post("/users/login").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andDo(print());
+    }
+
+    @Test
+    void logout() throws Exception {
+        mockHttpSession.setAttribute("SESSION_ID", "user1");
+        mockHttpSession.setAttribute("USER_TYPE", UserType.USER);
+
+        mockMvc.perform(delete("/users/logout").session(mockHttpSession))
+                .andExpect(status().is2xxSuccessful())
+                .andDo(print());
+
+
+        Assertions.assertNull(mockHttpSession.getAttribute("SESSION_ID"));
+        Assertions.assertNull(mockHttpSession.getAttribute("USER_TYPE"));
+    }
+
+    @Test
+    void updateUser(@Autowired UserMapper userMapper) throws Exception {
+        String userId = "user1";
+        mockHttpSession.setAttribute("SESSION_ID", userId);
+        mockHttpSession.setAttribute("USER_TYPE", UserType.USER);
+
+        UserDto userDto = UserDto.builder().id("user1").name("홍길동").email("이메일123").studentId("1234").phoneNumber("1233444").build();
+        String json = objectMapper.writeValueAsString(userDto);
+
+        UserDto before = userMapper.findById(userId);
+
+        mockMvc.perform(patch("/users").session(mockHttpSession)
+                        .content(json).contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().is2xxSuccessful())
+                .andDo(print());
+
+        UserDto after = userMapper.findById(userId);
+        Assertions.assertNotEquals(before.getName(), after.getName());
+    }
+
+    @Test
+    void deleteUser(@Autowired UserMapper userMapper) throws Exception {
+        String userId = "user1";
+        mockHttpSession.setAttribute("SESSION_ID", userId);
+        mockHttpSession.setAttribute("USER_TYPE", UserType.USER);
+
+        mockMvc.perform(delete("/users").session(mockHttpSession))
+                .andExpect(status().is2xxSuccessful())
+                .andDo(print());
+        UserDto findById = userMapper.findById(userId);
+        Assertions.assertNull(findById);
     }
 
 

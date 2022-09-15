@@ -1,6 +1,7 @@
 package com.example.uni.dto;
 
 
+import com.example.uni.enums.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,4 +19,6 @@ public class SignUpDto {
     private String name;
     private String phoneNumber;
     private String studentId;
+    private Long departmentId;
+    private UserType type;
 }
