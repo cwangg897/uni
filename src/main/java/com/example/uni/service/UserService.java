@@ -24,27 +24,31 @@ public class UserService {
     }
 
 
-    public void login(UserDto userDto){
+    public void login(UserDto userDto) {
         if (!userMapper.idExists(userDto.getId())) {
             throw new UserException("존재하지 않는 아이디입니다", HttpStatus.NOT_FOUND);
         }
 
         UserDto findUser = userMapper.findById(userDto.getId());
 
-        if (!userDto.getPassword().equals(findUser.getPassword()) ) {
+        if (!userDto.getPassword().equals(findUser.getPassword())) {
             throw new UserException("아이디랑 비밀번호를 확인해주세요", HttpStatus.BAD_REQUEST);
         }
-        loginService.loginUser(findUser.getId(), findUser.getType());
+        loginService.loginUser(userDto);
     }
 
-    public void updateUser(UserDto userDto, String id){
+    public void updateUser(UserDto userDto, String id) {
+
+        if (!id.equals(userDto.getId())) {
+            throw new UserException("정보 변경이 불가능합니다", HttpStatus.FORBIDDEN);
+        }
+
         userMapper.update(userDto, id);
     }
 
-    public void deleteUser(String userId){
+    public void deleteUser(String userId) {
         userMapper.delete(userId);
     }
-
 
 
 }

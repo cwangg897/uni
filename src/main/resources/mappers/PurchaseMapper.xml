@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.uni.mapper.PurchaseMapper">
+
+    <insert id="save">
+        INSERT INTO PURCHASE_HISTORY(visit_time, user_id, book_id)
+        VALUES (#{p.visitTime}, #{p.userId}, #{p.bookId})
+    </insert>
+
+    <update id="changeApprove">
+        update PURCHASE_HISTORY
+        SET type = #{p.type}
+        WHERE id = #{id}
+    </update>
+
+    <select id="findAllByUserId" resultType="PurchaseDto">
+        select *
+        FROM PURCHASE_HISTORY
+        WHERE user_id = #{userId}
+    </select>
+
+
+    <select id="findAllByAdminByNotApprove" resultType="PurchaseDto">
+        select *
+        FROM PURCHASE_HISTORY
+        WHERE book_id in (select book_id from book where user_id = #{userId}) and type = #{type}
+    </select>
+
+</mapper>

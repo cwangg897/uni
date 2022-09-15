@@ -18,7 +18,7 @@ public interface UserMapper {
 
     UserDto findById(String id);
 
-    void update(@Param("user") UserDto userDto, @Param("id") String id);
+    void update(@Param("user") UserDto userDto ,@Param("userId") String id);
 
     void delete(String id);
 

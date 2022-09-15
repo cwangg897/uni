@@ -16,8 +16,9 @@
 
 
     <insert id="save" parameterType="SignUpDto">
-        INSERT INTO USER(id, email, password, name, phone_number, student_id)
-        VALUES (#{user.id}, #{user.email}, #{user.password}, #{user.name}, #{user.phoneNumber}, #{user.studentId})
+        INSERT INTO USER(id, email, password, name, phone_number, student_id, department_id, type)
+        VALUES (#{user.id}, #{user.email}, #{user.password}, #{user.name}, #{user.phoneNumber},
+                #{user.studentId}, #{user.departmentId}, #{user.type})
     </insert>
 
     <select id="findById" resultType="UserDto">
@@ -32,7 +33,7 @@
             name         = #{user.name},
             phone_number = #{user.phoneNumber},
             student_id   = #{user.studentId}
-        WHERE id = #{id};
+        WHERE id = #{userId};
     </update>
 
     <delete id="delete">
