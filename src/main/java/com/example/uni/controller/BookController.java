@@ -6,7 +6,6 @@ import com.example.uni.annotation.LoginCheck;
 import com.example.uni.annotation.SessionUserId;
 import com.example.uni.dto.BookDto;
 import com.example.uni.enums.BookStatus;
-import com.example.uni.enums.BookType;
 import com.example.uni.enums.UserType;
 import com.example.uni.service.BookService;
 import lombok.RequiredArgsConstructor;
@@ -21,24 +20,24 @@ public class BookController {
 
     private final BookService bookService;
 
-    /**
-     * 조교가 책 등록가능하다
-     */
-    @LoginCheck(userType = UserType.ADMIN)
+    // 책 판매 글 등록
+    @LoginCheck(userType = UserType.ALL)
     @PostMapping
     public ResponseEntity<Void> save(@RequestBody BookDto bookDto, @SessionUserId String userId) {
         bookService.save(bookDto, userId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @LoginCheck(userType = UserType.ADMIN)
+    // 상태 변경가능하게 해야겠다(책 아이디를 등록한 사람이랑 로그인한 유저랑같으면)
+    // 글 변경
+    @LoginCheck(userType = UserType.USER)
     @PatchMapping("/{id}")
     public ResponseEntity<Void> update(@RequestBody BookDto bookDto, @PathVariable Long id) {
         bookService.update(bookDto, id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    // STATUS 상태변경 WAIT -> 구입완료같은걸로 조교봔 조교가 승인되면 그러면되것네
+    // 상태 변경가능하게 해야겠다(책 아이디를 등록한 사람이랑 로그인한 유저랑같으면)
     @LoginCheck(userType = UserType.ADMIN)
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
@@ -46,25 +45,34 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    //    @LoginCheck(userType = UserType.USER)
+    // 목록 다 보기
+    @LoginCheck(userType = UserType.ALL)
     @GetMapping
     public ResponseEntity<List<BookDto>> findAll() {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.findAll());
     }
 
-    // 학과별 책은 유저아이디로 ADMIN이 조교아이디가 학과별 책임
+    // 책 상세보기
+    @LoginCheck(userType = UserType.ALL)
+    @GetMapping("/{id}")
+    public ResponseEntity<BookDto> findById(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(bookService.findById(id));
+    }
 
-//    // 대기 완료
-//    @GetMapping
-//    public ResponseEntity<List<BookDto>> findAllByStatus(@RequestParam("status") BookStatus status) {
-//        return ResponseEntity.status(HttpStatus.OK).body(bookService.findAllByStatus(status));
-//    }
-//
-//    // 빌리는지 파는지
-//    @GetMapping
-//    public ResponseEntity<List<BookDto>> findAllByStatus(@RequestParam("type") BookType type) {
-//        return ResponseEntity.status(HttpStatus.OK).body(bookService.findAllByType(type));
-//    }
+    // status에 따라 보기
+    @LoginCheck(userType = UserType.ALL)
+    @GetMapping("/{id}")
+    public ResponseEntity<List<BookDto>> findAllByStatus(@RequestParam("bookStatus")BookStatus status) {
+        return ResponseEntity.status(HttpStatus.OK).body(bookService.findAllByStatus(status));
+    }
+
+    // 상태 변경가능하게 해야겠다(책 아이디를 등록한 사람이랑 로그인한 유저랑같으면)
+
+
+
+
+
+
 
 
 }
