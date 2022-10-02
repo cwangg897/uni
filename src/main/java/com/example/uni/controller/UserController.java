@@ -1,9 +1,14 @@
 package com.example.uni.controller;
 
+import java.util.List;
+
 import com.example.uni.annotation.LoginCheck;
 import com.example.uni.annotation.SessionUserId;
+import com.example.uni.dto.BookDto;
 import com.example.uni.dto.SignUpDto;
 import com.example.uni.dto.UserDto;
+import com.example.uni.enums.UserType;
+import com.example.uni.service.BookService;
 import com.example.uni.service.LoginService;
 import com.example.uni.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +23,7 @@ public class UserController {
 
     private final UserService userService;
     private final LoginService loginService;
+    private final BookService bookService;
 
     @PostMapping
     public ResponseEntity<Void> signUp(@RequestBody SignUpDto userDto) {
@@ -51,6 +57,13 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@SessionUserId String userId) {
         userService.deleteUser(userId);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    // 작성한 글 목록 다 보기
+    @LoginCheck(userType = UserType.USER)
+    @GetMapping("/books")
+    public ResponseEntity<List<BookDto>> findAllBook(@SessionUserId String userId) {
+        return ResponseEntity.status(HttpStatus.OK).body(bookService.findAllByUserId(userId));
     }
 
 }

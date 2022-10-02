@@ -1,10 +1,7 @@
 package com.example.uni.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.example.uni.dto.BookDto;
 import com.example.uni.enums.BookStatus;
-import com.example.uni.enums.BookType;
 import com.example.uni.enums.UserType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -43,7 +40,7 @@ class BookControllerTest {
                 .price(10000L)
                 .publisher("출판사2")
                 .publicationDate("출판날짜2")
-                .type(BookType.SALD)
+                .status(BookStatus.SELL)
                 .build();
     }
 

@@ -5,46 +5,61 @@
 
 
     <insert id="save">
-        INSERT INTO BOOK(name, publisher, author, image, publication_date, price, content, type, user_id)
+        INSERT INTO BOOK(name, publisher, author, image, publication_date, price, content, user_id, status, title)
         VALUES (#{book.name}, #{book.publisher}, #{book.author}, #{book.image}, #{book.publicationDate}, #{book.price},
-                #{book.content}, #{book.type}, #{userId})
+                #{book.content}, #{userId}, #{book.status}, #{book.title})
     </insert>
 
-
     <update id="update">
-        UPDATE BOOK
+        UPDATE BOOk
         SET name             = #{book.name},
             publisher        = #{book.publisher},
-            ahthor           = #{book.author},
+            author           = #{book.author},
             image            = #{book.image},
             publication_date = #{book.publicationDate},
             price            = #{book.price},
             content          = #{book.content},
-            type             = #{book.type}
-        WHERE id = #{id}
+            status           = #{book.status},
+            title            = #{book.title}
+        WHERE id = id
     </update>
 
     <delete id="delete">
-        DELETE FROM BOOK
-        WHERE ID = #{id}
+        DELETE
+        FROM BOOK
+        WHERE id = #{id};
     </delete>
 
     <select id="findAll" resultType="BookDto">
         SELECT *
+        FROM BOOK;
+    </select>
+
+    <select id="findById" resultType="BookDto">
+        SELECT *
         FROM BOOK
-        ORDER BY id asc
+        WHERE id = id;
     </select>
 
     <select id="findAllByStatus" resultType="BookDto">
         SELECT *
         FROM BOOK
-        WHERE status = #{status}
+        WHERE status = #{status};
+    </select>
+
+    <select id="findAllByUserId" resultType="BookDto">
+        SELECT *
+        FROM BOOK
+        WHERE user_id = #{userId}
     </select>
 
     <update id="changeStatus">
         UPDATE BOOK
         SET status = #{status}
-        WHERE id = #{id}
+        WHERE id = #{bookId}
     </update>
+
+
+
 
 </mapper>
