@@ -3,6 +3,7 @@ package com.example.uni.mapper;
 import java.util.List;
 
 import com.example.uni.dto.BookDto;
+import com.example.uni.dto.ReservationDto;
 import com.example.uni.enums.BookStatus;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -25,4 +26,9 @@ public interface BookMapper {
     List<BookDto> findAllByUserId(String userId);
 
     void changeStatus(@Param("bookId") Long bookId, @Param("status") BookStatus status);
+
+    List<BookDto> findAllById(@Param("reserveList") List<ReservationDto> reservationDtoList);
+
+    List<BookDto> findAllSearch(String title);
+
 }

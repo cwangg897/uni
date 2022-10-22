@@ -22,4 +22,5 @@ public interface UserMapper {
 
     void delete(String id);
 
+    UserDto myInfo(String userId);
 }

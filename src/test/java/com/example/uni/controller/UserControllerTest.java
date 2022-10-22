@@ -1,5 +1,6 @@
 package com.example.uni.controller;
 
+import com.example.uni.EnableMockMvc;
 import com.example.uni.dto.SignUpDto;
 import com.example.uni.dto.UserDto;
 import com.example.uni.enums.UserType;
@@ -7,7 +8,6 @@ import com.example.uni.mapper.UserMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @Transactional
-@AutoConfigureMockMvc
+@EnableMockMvc
 class UserControllerTest {
 
     @Autowired
@@ -34,13 +34,12 @@ class UserControllerTest {
 
     public SignUpDto getSignUpDto() {
         return SignUpDto.builder()
-                .id("computer")
+                .id("user3")
                 .password("1234")
-                .name("조교1")
-                .email("admin1@naver.com")
-                .studentId("20172222")
-                .phoneNumber("010-1234-1234")
-                .departmentId(1L)
+                .name("이름3")
+                .email("user3@naver.com")
+                .studentId("20173333")
+                .phoneNumber("010-3333-3333")
                 .type(UserType.ADMIN)
                 .build();
     }
@@ -111,6 +110,16 @@ class UserControllerTest {
                 .andDo(print());
         UserDto findById = userMapper.findById(userId);
         Assertions.assertNull(findById);
+    }
+
+    @Test
+    void findAllBook() throws Exception{
+        mockHttpSession.setAttribute("SESSION_ID", "user2");
+        mockHttpSession.setAttribute("USER_TYPE", UserType.USER);
+
+        mockMvc.perform(get("/users/books").session(mockHttpSession))
+                .andExpect(status().is2xxSuccessful())
+                .andDo(print());
     }
 
 
