@@ -38,21 +38,21 @@ public class UserController {
     }
 
 
-    @LoginCheck
+    @LoginCheck(userType = UserType.USER)
     @DeleteMapping("/logout")
     public ResponseEntity<Void> logoutUser() {
         loginService.logoutUser();
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @LoginCheck
+    @LoginCheck(userType = UserType.USER)
     @PatchMapping
     public ResponseEntity<Void> updateUser(@SessionUserId String userId, @RequestBody UserDto userDto) {
         userService.updateUser(userDto, userId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @LoginCheck
+    @LoginCheck(userType = UserType.USER)
     @DeleteMapping
     public ResponseEntity<Void> deleteUser(@SessionUserId String userId) {
         userService.deleteUser(userId);
@@ -64,6 +64,12 @@ public class UserController {
     @GetMapping("/books")
     public ResponseEntity<List<BookDto>> findAllBook(@SessionUserId String userId) {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.findAllByUserId(userId));
+    }
+
+    @LoginCheck(userType = UserType.USER)
+    @GetMapping
+    public ResponseEntity<UserDto> myInfo(@SessionUserId String userId) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.myInfo(userId));
     }
 
 }

@@ -50,5 +50,7 @@ public class UserService {
         userMapper.delete(userId);
     }
 
-
+    public UserDto myInfo(String userId) {
+        return userMapper.myInfo(userId);
+    }
 }

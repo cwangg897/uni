@@ -5,6 +5,7 @@ import java.util.List;
 import com.example.uni.annotation.LoginCheck;
 import com.example.uni.annotation.SessionUserId;
 import com.example.uni.dto.ReservationDto;
+import com.example.uni.dto.ReservationResponseDto;
 import com.example.uni.enums.UserType;
 import com.example.uni.service.ReservationService;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class ReservationController {
     // 자기가 등록한 책들의 아이디에서 요청한 목록을 찾기
     @LoginCheck(userType = UserType.USER)
     @GetMapping("/response")
-    public ResponseEntity<List<ReservationDto>> getResponseAll(@SessionUserId String userId) {
+    public ResponseEntity<ReservationResponseDto> getResponseAll(@SessionUserId String userId) {
         return ResponseEntity.status(HttpStatus.OK).body(reservationService.getResponseAll(userId));
     }
 
@@ -40,7 +41,7 @@ public class ReservationController {
     // 예약테이블에서 요청한 사람의 아이디로 검색하기
     @LoginCheck(userType = UserType.USER)
     @GetMapping("/request")
-    public ResponseEntity<List<ReservationDto>> getRequestAll(@SessionUserId String userId) {
+    public ResponseEntity<ReservationResponseDto> getRequestAll(@SessionUserId String userId) {
         return ResponseEntity.status(HttpStatus.OK).body(reservationService.getRequestAll(userId));
     }
 

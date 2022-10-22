@@ -43,4 +43,10 @@
     </delete>
 
 
+    <select id="myInfo" resultType="UserDto">
+        SELECT *
+        FROM USER
+        WHERE id = #{userId}
+    </select>
+
 </mapper>

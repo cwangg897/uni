@@ -32,47 +32,53 @@ public class BookController {
     // 글 변경
     @LoginCheck(userType = UserType.USER)
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> update(@RequestBody BookDto bookDto, @PathVariable Long id) {
-        bookService.update(bookDto, id);
+    public ResponseEntity<Void> update(@RequestBody BookDto bookDto, @PathVariable Long id, @SessionUserId String userId) {
+        bookService.update(bookDto, id, userId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    // 상태 변경가능하게 해야겠다(책 아이디를 등록한 사람이랑 로그인한 유저랑같으면)
-    @LoginCheck(userType = UserType.ADMIN)
+    @LoginCheck(userType = UserType.USER)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        bookService.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id, @RequestBody BookDto bookDto, @SessionUserId String userId) {
+        bookService.delete(id, bookDto, userId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     // 목록 다 보기
-    @LoginCheck(userType = UserType.ALL)
+//    @LoginCheck(userType = UserType.ALL)
     @GetMapping
     public ResponseEntity<List<BookDto>> findAll() {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.findAll());
     }
 
     // 책 상세보기
-    @LoginCheck(userType = UserType.ALL)
+//    @LoginCheck(userType = UserType.ALL)
     @GetMapping("/{id}")
     public ResponseEntity<BookDto> findById(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.findById(id));
     }
 
     // status에 따라 보기
-    @LoginCheck(userType = UserType.ALL)
-    @GetMapping("/{id}")
-    public ResponseEntity<List<BookDto>> findAllByStatus(@RequestParam("bookStatus")BookStatus status) {
+//    @LoginCheck(userType = UserType.ALL)
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<BookDto>> findAllByStatus(@PathVariable BookStatus status) {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.findAllByStatus(status));
     }
 
-    // 상태 변경가능하게 해야겠다(책 아이디를 등록한 사람이랑 로그인한 유저랑같으면)
+    // 상태 변경가능하게 해야겠다(책 아이디를 등록한 사람이랑 로그인한 유저랑같으면) 이것만따로해줘야해
+    @LoginCheck(userType = UserType.USER)
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Void> changeStatus(@RequestBody BookDto bookDto, @PathVariable Long id,
+                                             @SessionUserId String userId) {
+        bookService.validChangeStatus(id, bookDto.getStatus(), bookDto.getUserId(), userId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
-
-
-
-
-
+//    @LoginCheck(userType = UserType.ALL)
+    @GetMapping("/title/{title}")
+    public ResponseEntity<List<BookDto>> findAllSearch(@PathVariable String title) {
+        return ResponseEntity.status(HttpStatus.OK).body(bookService.findAllSearch(title));
+    }
 
 
 }

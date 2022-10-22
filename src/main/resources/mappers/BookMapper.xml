@@ -21,7 +21,7 @@
             content          = #{book.content},
             status           = #{book.status},
             title            = #{book.title}
-        WHERE id = id
+        WHERE id = #{id}
     </update>
 
     <delete id="delete">
@@ -38,7 +38,7 @@
     <select id="findById" resultType="BookDto">
         SELECT *
         FROM BOOK
-        WHERE id = id;
+        WHERE id = #{id};
     </select>
 
     <select id="findAllByStatus" resultType="BookDto">
@@ -60,6 +60,21 @@
     </update>
 
 
+    <select id="findAllById" resultType="BookDto">
+        SELECT *
+        FROM BOOK
+        WHERE id IN
+        <foreach collection="reserveList" item="reserve" separator="," open="(" close=")">
+            #{reserve.bookId}
+        </foreach>
+    </select>
+
+
+    <select id="findAllSearch" resultType="BookDto">
+        SELECT *
+        FROM BOOK
+        WHERE title LIKE CONCAT('%', #{title}, '%')
+    </select>
 
 
 </mapper>

@@ -20,5 +20,4 @@ public class UserDto {
     private String phoneNumber;
     private String studentId;
     private UserType type;
-    private Long departmentId;
 }
