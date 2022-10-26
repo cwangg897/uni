@@ -34,13 +34,13 @@ class UserControllerTest {
 
     public SignUpDto getSignUpDto() {
         return SignUpDto.builder()
-                .id("user3")
+                .id("user6")
                 .password("1234")
-                .name("이름3")
-                .email("user3@naver.com")
-                .studentId("20173333")
-                .phoneNumber("010-3333-3333")
-                .type(UserType.ADMIN)
+                .name("이름6")
+                .email("user6@naver.com")
+                .studentId("20176666")
+                .phoneNumber("010-6666-6666")
+                .type(UserType.USER)
                 .build();
     }
 
@@ -56,7 +56,7 @@ class UserControllerTest {
     // 존재 안하고 하면 CLIENT_ERROR
     @Test
     void login() throws Exception {
-        UserDto userDto = UserDto.builder().id("user1").password("1234").build();
+        UserDto userDto = UserDto.builder().id("user3").password("1234").build();
         String json = objectMapper.writeValueAsString(userDto);
 
         mockMvc.perform(post("/users/login").content(json).contentType(MediaType.APPLICATION_JSON))

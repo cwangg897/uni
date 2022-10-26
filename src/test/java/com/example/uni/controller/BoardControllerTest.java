@@ -17,9 +17,11 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Transactional;
 
 @EnableMockMvc
 @SpringBootTest
+@Transactional
 class BoardControllerTest {
 
     @Autowired
@@ -28,7 +30,7 @@ class BoardControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    MockHttpSession mockHttpSession = new MockHttpSession();
+
 
     String title = "제목2";
     String content = "내용입니다2";
@@ -45,11 +47,9 @@ class BoardControllerTest {
 
     @Test
     void save() throws Exception {
-        mockHttpSession.setAttribute("SESSION_ID", "user1");
-        mockHttpSession.setAttribute("USER_TYPE", UserType.USER);
 
         String json = objectMapper.writeValueAsString(getBoardDto());
-        mockMvc.perform(post("/boards").session(mockHttpSession).content(json).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/boards").param("userId", userId).content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andDo(print());
     }
@@ -57,40 +57,29 @@ class BoardControllerTest {
     @Test
     void update() throws Exception {
         title = "제목수정1";
-        mockHttpSession.setAttribute("SESSION_ID", "user1");
-        mockHttpSession.setAttribute("USER_TYPE", UserType.USER);
-
         String json = objectMapper.writeValueAsString(getBoardDto());
-        mockMvc.perform(patch("/boards/1").session(mockHttpSession).content(json).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(patch("/boards/7").param("userId", "user6").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andDo(print());
     }
 
     @Test
     void delete() throws Exception {
-        mockHttpSession.setAttribute("SESSION_ID", "user1");
-        mockHttpSession.setAttribute("USER_TYPE", UserType.USER);
-        mockMvc.perform(MockMvcRequestBuilders.delete("/boards/1").session(mockHttpSession))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/boards/7").param("userId", userId))
                 .andExpect(status().is2xxSuccessful())
                 .andDo(print());
     }
 
     @Test
     void findAll() throws Exception{
-        mockHttpSession.setAttribute("SESSION_ID", "user1");
-        mockHttpSession.setAttribute("USER_TYPE", UserType.USER);
-
-        mockMvc.perform(get("/boards").session(mockHttpSession))
+        mockMvc.perform(get("/boards"))
                 .andExpect(status().is2xxSuccessful())
                 .andDo(print());
     }
 
     @Test
     void findById() throws Exception{
-        mockHttpSession.setAttribute("SESSION_ID", "user1");
-        mockHttpSession.setAttribute("USER_TYPE", UserType.USER);
-
-        mockMvc.perform(get("/board/1").session(mockHttpSession))
+        mockMvc.perform(get("/boards/7"))
                 .andExpect(status().is2xxSuccessful())
                 .andDo(print());
     }

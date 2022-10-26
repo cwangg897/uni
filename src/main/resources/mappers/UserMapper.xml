@@ -16,9 +16,9 @@
 
 
     <insert id="save" parameterType="SignUpDto">
-        INSERT INTO USER(id, email, password, name, phone_number, student_id, department_id, type)
+        INSERT INTO USER(id, email, password, name, phone_number, student_id, type)
         VALUES (#{user.id}, #{user.email}, #{user.password}, #{user.name}, #{user.phoneNumber},
-                #{user.studentId}, #{user.departmentId}, #{user.type})
+                #{user.studentId}, #{user.type})
     </insert>
 
     <select id="findById" resultType="UserDto">

@@ -20,9 +20,8 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
     private final CommentService commentService;
 
-    @LoginCheck(userType = UserType.USER)
     @PostMapping
-    public ResponseEntity<Void> createComment(@RequestBody CommentDto commentDto, @SessionUserId String userId) {
+    public ResponseEntity<Void> createComment(@RequestBody CommentDto commentDto, @RequestParam("userId") String userId) {
         commentService.createComment(commentDto, userId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -33,17 +32,15 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
-    @LoginCheck(userType = UserType.USER)
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updateComment(@PathVariable Long id, @RequestBody CommentDto commentDto,
-                                              @SessionUserId String userId) {
+                                              @RequestParam("userId") String userId) {
         commentService.updateComment(id, commentDto, userId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @LoginCheck(userType = UserType.USER)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long id, @SessionUserId String userId) {
+    public ResponseEntity<Void> deleteComment(@PathVariable Long id, @RequestParam("userId") String userId) {
         commentService.deleteComment(id, userId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

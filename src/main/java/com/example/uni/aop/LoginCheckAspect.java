@@ -1,5 +1,7 @@
 package com.example.uni.aop;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.example.uni.annotation.LoginCheck;
 import com.example.uni.enums.UserType;
 import com.example.uni.exception.UserException;
@@ -20,6 +22,10 @@ public class LoginCheckAspect {
     @Before("@annotation(com.example.uni.annotation.LoginCheck) && @annotation(target)")
     public void sessionLoginCheck(LoginCheck target) {
         String sessionUserId = loginService.getSessionUserId();
+        System.out.println("===============");
+        System.out.println("sessionUserId = " + sessionUserId);
+        System.out.println("loginService = " + loginService.getUserType());
+        System.out.println("===============");
 
         if (sessionUserId == null) {
             throw new UserException("유효하지않는 세션입니다", HttpStatus.UNAUTHORIZED);
