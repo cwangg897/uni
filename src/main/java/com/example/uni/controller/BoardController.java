@@ -21,9 +21,8 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    @LoginCheck(userType = UserType.USER)
     @PostMapping
-    public ResponseEntity<Void> createBoard(@RequestBody BoardDto boardDto, @SessionUserId String userId) {
+    public ResponseEntity<Void> createBoard(@RequestBody BoardDto boardDto, @RequestParam("userId") String userId) {
         boardService.createBoard(boardDto, userId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -34,18 +33,23 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
-    @LoginCheck(userType = UserType.USER)
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateBoard(@PathVariable Long id, @RequestBody BoardDto boardDto, @SessionUserId String userId) {
+    public ResponseEntity<Void> updateBoard(@PathVariable Long id, @RequestBody BoardDto boardDto,
+                                            @RequestParam("userId") String userId) {
         boardService.updateBoard(id, boardDto, userId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @LoginCheck(userType = UserType.USER)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBoard(@PathVariable Long id, @SessionUserId String userId) {
+    public ResponseEntity<Void> deleteBoard(@PathVariable Long id, @RequestParam("userId") String userId) {
         boardService.deleteBoard(id, userId);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BoardDto> findById(@PathVariable Long id) {
+        BoardDto boardDto = boardService.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(boardDto);
     }
 
 }

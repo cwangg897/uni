@@ -38,37 +38,34 @@ public class UserController {
     }
 
 
-    @LoginCheck(userType = UserType.USER)
     @DeleteMapping("/logout")
     public ResponseEntity<Void> logoutUser() {
         loginService.logoutUser();
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @LoginCheck(userType = UserType.USER)
+    // LoginCheck에서 권한을 체크하는것을 찾아야겠네
     @PatchMapping
-    public ResponseEntity<Void> updateUser(@SessionUserId String userId, @RequestBody UserDto userDto) {
+    public ResponseEntity<Void> updateUser(@RequestParam("userId") String userId, @RequestBody UserDto userDto) {
         userService.updateUser(userDto, userId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @LoginCheck(userType = UserType.USER)
     @DeleteMapping
-    public ResponseEntity<Void> deleteUser(@SessionUserId String userId) {
+    public ResponseEntity<Void> deleteUser(@RequestParam("userId") String userId) {
         userService.deleteUser(userId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     // 작성한 글 목록 다 보기
-    @LoginCheck(userType = UserType.USER)
     @GetMapping("/books")
-    public ResponseEntity<List<BookDto>> findAllBook(@SessionUserId String userId) {
+    public ResponseEntity<List<BookDto>> findAllBook(@RequestParam("userId") String userId) {
+        System.out.println("userId = " + userId);
         return ResponseEntity.status(HttpStatus.OK).body(bookService.findAllByUserId(userId));
     }
 
-    @LoginCheck(userType = UserType.USER)
     @GetMapping
-    public ResponseEntity<UserDto> myInfo(@SessionUserId String userId) {
+    public ResponseEntity<UserDto> myInfo(@RequestParam("userId") String userId) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.myInfo(userId));
     }
 

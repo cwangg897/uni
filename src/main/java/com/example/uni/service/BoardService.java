@@ -41,4 +41,8 @@ public class BoardService {
         validAuthority(boardDto.getUserId(), userId);
         boardMapper.deleteBoard(id);
     }
+
+    public BoardDto findById(Long id) {
+        return boardMapper.findById(id);
+    }
 }

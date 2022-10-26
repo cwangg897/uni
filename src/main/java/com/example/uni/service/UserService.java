@@ -2,6 +2,7 @@ package com.example.uni.service;
 
 import com.example.uni.dto.SignUpDto;
 import com.example.uni.dto.UserDto;
+import com.example.uni.enums.UserType;
 import com.example.uni.exception.UserException;
 import com.example.uni.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -53,4 +54,5 @@ public class UserService {
     public UserDto myInfo(String userId) {
         return userMapper.myInfo(userId);
     }
+
 }
